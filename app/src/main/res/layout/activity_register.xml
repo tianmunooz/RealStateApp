@@ -17,11 +17,13 @@
         android:padding="8dp">
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/img_regresar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:src="@drawable/baseline_arrow_back_24" />
+            android:src="@drawable/baseline_arrow_back_24"
+            android:clickable="true"
+            android:onClick="onImageClick"/>
 
         <TextView
             android:id="@+id/crearCuentaTextView"
@@ -29,8 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="8dp"
-            android:layout_toEndOf="@id/imageView3"
-            android:layout_toRightOf="@id/imageView3"
+            android:layout_toEndOf="@id/img_regresar"
+            android:layout_toRightOf="@id/img_regresar"
             android:fontFamily="@font/inter_tight"
             android:text="Crear cuenta"
             android:textColor="#000000"
@@ -46,9 +48,10 @@
         android:layout_marginBottom="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:hint="Correo"
+            android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Correo"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,9 +61,10 @@
         android:layout_marginBottom="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:hint="Nombre"
+            android:id="@+id/editTextNombre"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="Nombre" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -69,9 +73,10 @@
         android:layout_marginBottom="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:hint="Apellido"
+            android:id="@+id/editTextApellido"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="Apellido" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -80,7 +85,7 @@
         android:layout_marginBottom="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextDate"
+            android:id="@+id/editTextFechaNacimiento"
             android:hint="Fecha de nacimiento (dd/mm/yyyy)"
             android:inputType="date"
             android:layout_width="match_parent"
@@ -93,10 +98,11 @@
         android:layout_marginBottom="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:hint="Contraseña"
-            android:inputType="textPassword"
+            android:id="@+id/editTextContraseña"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="Contraseña"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -105,15 +111,16 @@
         android:layout_marginBottom="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:hint="Repetir contraseña"
-            android:inputType="textPassword"
+            android:id="@+id/editTextRepetirContraseña"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="Repetir contraseña"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Botón Guardar -->
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_crear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#8B5CF6"

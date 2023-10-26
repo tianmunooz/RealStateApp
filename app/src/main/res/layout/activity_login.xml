@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitXY"
-        android:src="@tools:sample/avatars"
+        tools:srcCompat="@tools:sample/avatars"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,9 +39,10 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEmailLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Escribe tu corre" />
+                android:hint="Escribe tu correo" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -49,14 +50,16 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextContrasenaLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Escribe tu contraseña" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
+
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btn_iniciarsesion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#8B5CF6"
@@ -66,7 +69,7 @@
             app:cornerRadius="6dp" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btn_crearcuenta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#EDE9FE"
@@ -75,6 +78,7 @@
             android:text="Crear cuenta"
             android:textColor="#8B5CF6"
             app:cornerRadius="6dp" />
+
 
         <Button
             android:id="@+id/button3"

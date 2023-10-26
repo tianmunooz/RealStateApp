@@ -37,7 +37,7 @@
                     android:id="@+id/imageView2"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@tools:sample/avatars"
+                    tools:srcCompat="@tools:sample/avatars"
                     android:layout_marginStart="8dp"/>
             </LinearLayout>
 
@@ -85,7 +85,7 @@
 
                 <!-- Botón Buscar -->
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/btn_iniciarsesion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
