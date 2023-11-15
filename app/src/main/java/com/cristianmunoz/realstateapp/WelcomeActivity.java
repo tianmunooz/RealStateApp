@@ -1,6 +1,7 @@
 package com.cristianmunoz.realstateapp;
 
         import android.os.Bundle;
+        import android.util.Log;
         import android.view.View;
         import android.widget.Button;
         import android.widget.Toast;
@@ -58,14 +59,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void setupProvinceSpinner() {
         spinnerProvinces = findViewById(R.id.spinnerProvinces);
-        List<String> provinces = Arrays.asList(
-                "Araba", "Albacete", "Alicante", "Almería", "Asturias", "Ávila", "Badajoz", "Barcelona",
-                "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellon", "Ciudad Real", "Córdoba",
-                "La Coruña", "Cuenca", "Gerona", "Granada", "Guadalajara", "Gipuzkoa", "Huelva",
-                "Huesca", "Baleares", "Jaén", "León", "Lerida", "Lugo", "Madrid", "Malaga", "Murcia",
-                "Navarra", "Orense", "Palencia", "Las Palmas", "Pontevedra", "La Rioja", "Salamanca",
-                "Segovia", "Sevilla", "Soria", "Tarragona", "Santa Cruz de Tenerife", "Teruel",
-                "Toledo", "Valencia", "Valladolid", "Bizkaia", "Zamora", "Zaragoza");
+        List<String> provinces = Arrays.asList("araba", "albacete", "alicante", "almería", "asturias", "ávila", "badajoz", "barcelona", "burgos", "cáceres", "cádiz", "cantabria", "castellon", "ciudad real", "córdoba", "la coruña", "cuenca", "gerona", "granada", "guadalajara", "gipuzkoa", "huelva", "huesca", "baleares", "jaén", "león", "lerida", "lugo", "madrid", "malaga", "murcia", "navarra", "orense", "palencia", "las palmas", "pontevedra", "la rioja", "salamanca", "segovia", "sevilla", "soria", "tarragona", "santa cruz de tenerife", "teruel", "toledo", "valencia", "valladolid", "bizkaia", "zamora", "zaragoza");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, provinces);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -117,54 +111,61 @@ public class WelcomeActivity extends AppCompatActivity {
 
         Query query = db.collection("real_estate_data_new");
 
+        // Aplicación de filtros
         if (!selectedProvince.isEmpty()) {
             query = query.whereEqualTo("province", selectedProvince);
         }
-        if (!minPriceStr.isEmpty()) {
-            try {
+
+        try {
+            if (!minPriceStr.isEmpty()) {
                 long minPrice = Long.parseLong(minPriceStr);
                 query = query.whereGreaterThanOrEqualTo("price", minPrice);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "Precio mínimo no válido", Toast.LENGTH_SHORT).show();
-                return;
             }
-        }
-        if (!maxPriceStr.isEmpty()) {
-            try {
+            if (!maxPriceStr.isEmpty()) {
                 long maxPrice = Long.parseLong(maxPriceStr);
                 query = query.whereLessThanOrEqualTo("price", maxPrice);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "Precio máximo no válido", Toast.LENGTH_SHORT).show();
-                return;
             }
-        }
-        if (!minSizeStr.isEmpty()) {
-            try {
+            if (!minSizeStr.isEmpty()) {
                 long minSize = Long.parseLong(minSizeStr);
                 query = query.whereGreaterThanOrEqualTo("size", minSize);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "Tamaño mínimo no válido", Toast.LENGTH_SHORT).show();
-                return;
             }
-        }
-        if (!maxSizeStr.isEmpty()) {
-            try {
+            if (!maxSizeStr.isEmpty()) {
                 long maxSize = Long.parseLong(maxSizeStr);
                 query = query.whereLessThanOrEqualTo("size", maxSize);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "Tamaño máximo no válido", Toast.LENGTH_SHORT).show();
-                return;
             }
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Error en los valores numéricos", Toast.LENGTH_SHORT).show();
+            return;
         }
 
+        // Realizando la consulta
         query.limit(10).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // Procesa los resultados...
+                QuerySnapshot querySnapshot = task.getResult();
+                if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    List<Property> newProperties = new ArrayList<>();
+                    for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                        // Suponiendo que estos son los campos en tus documentos de Firestore
+                        String title = documentSnapshot.getString("title");
+                        String price = documentSnapshot.getLong("price").toString();
+                        String location = documentSnapshot.getString("location");
+                        String size = documentSnapshot.getLong("size").toString();
+                        String imageUrl = documentSnapshot.getString("image_url");
+
+                        newProperties.add(new Property(title, price, location, size, imageUrl));
+                    }
+                    propertyAdapter.setPropertyList(newProperties);
+                } else {
+                    Toast.makeText(WelcomeActivity.this, "No se encontraron propiedades", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(WelcomeActivity.this, "Error al filtrar propiedades", Toast.LENGTH_SHORT).show();
+                Log.e("FirestoreQueryError", "Error: ", task.getException());
+                Toast.makeText(WelcomeActivity.this, "Error al realizar la consulta", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+
 
 
 }
