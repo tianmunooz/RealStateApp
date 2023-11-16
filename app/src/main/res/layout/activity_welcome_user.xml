@@ -1,145 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
-
-<ScrollView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
-        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="0dp"
+            <!-- Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/inter_tight"
-                android:text="Bienvenido Cristian"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                tools:srcCompat="@tools:sample/avatars"
-                android:layout_marginStart="8dp"/>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/inter_tight"
+                    android:text="Bienvenido"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
-        <!-- Filtros -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="16dp">
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    tools:srcCompat="@tools:sample/avatars"
+                    android:layout_marginStart="8dp"/>
+            </LinearLayout>
 
-            <!-- Filtro Provincia (Ahora con Spinner) -->
-            <Spinner
-                android:id="@+id/spinnerProvinces"
+            <!-- Filtros -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
 
-            <!-- Filtro Precio Mínimo -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextMinPrice"
+                <!-- Filtro Provincia (Ahora con Spinner) -->
+                <Spinner
+                    android:id="@+id/spinnerProvinces"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- Filtro Precio Mínimo -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextMinPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Precio Mínimo" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Filtro Precio Máximo -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextMaxPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Precio Máximo" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Filtro Tamaño Mínimo -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextMinSize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Tamaño Mínimo" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Filtro Tamaño Máximo -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextMaxSize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Tamaño Máximo" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Botón Buscar -->
+                <Button
+                    android:id="@+id/btn_iniciarsesion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Precio Mínimo" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="16dp"
+                    android:backgroundTint="#8B5CF6"
+                    android:text="Buscar"
+                    android:textColor="@android:color/white"
+                    app:cornerRadius="8dp"
+                    android:onClick="onSearchClicked" />
 
-            <!-- Filtro Precio Máximo -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextMaxPrice"
+                <!-- Edificios Destacados -->
+                <TextView
+                    android:id="@+id/textView6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Precio Máximo" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="Edificios Destacados"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"/>
 
-            <!-- Filtro Tamaño Mínimo -->
-            <com.google.android.material.textfield.TextInputLayout
+            </LinearLayout>
+
+            <!-- RecyclerView para Edificios Destacados -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewProperties"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextMinSize"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Tamaño Mínimo" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <!-- Filtro Tamaño Máximo -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextMaxSize"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Tamaño Máximo" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Botón Buscar -->
+            <!-- Botón "Mostrar más" -->
             <Button
-                android:id="@+id/btn_iniciarsesion"
+                android:id="@+id/btnLoadMore"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:backgroundTint="#8B5CF6"
-                android:text="Buscar"
-                android:textColor="@android:color/white"
-                app:cornerRadius="8dp"
-                android:onClick="onSearchClicked" />
-
-            <!-- Edificios Destacados -->
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Edificios Destacados"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
-
+                android:text="Mostrar más"
+                android:onClick="onLoadMoreClicked"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#EDE9FE"
+                android:textColor="#8B5CF6"
+                app:cornerRadius="8dp" />
         </LinearLayout>
-
-        <!-- RecyclerView para Edificios Destacados -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewProperties"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <!-- Botón "Mostrar más" -->
-        <Button
-            android:id="@+id/btnLoadMore"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mostrar más"
-            android:layout_marginTop="16dp"/>
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

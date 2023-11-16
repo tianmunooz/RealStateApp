@@ -1,9 +1,9 @@
 package com.cristianmunoz.realstateapp;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -15,15 +15,15 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.Proper
 
     private List<Property> propertyList;
 
-    // Constructor que acepta una lista de Property
+    // Constructor that accepts a list of Property objects
     public PropertyAdapter(List<Property> propertyList) {
         this.propertyList = propertyList;
     }
 
-    // Método para actualizar la lista de propiedades
+    // Method to update the list of properties
     public void setPropertyList(List<Property> propertyList) {
         this.propertyList = propertyList;
-        notifyDataSetChanged();  // Notificar al adaptador que los datos han cambiado
+        notifyDataSetChanged(); // Notify the adapter that the data has changed
     }
 
     @NonNull
@@ -33,37 +33,35 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.Proper
         return new PropertyViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull PropertyViewHolder holder, int position) {
         Property property = propertyList.get(position);
         holder.textViewTitle.setText(property.getTitle());
-        holder.textViewPrice.setText(property.getPrice());
+
+        // Converting Long to String for display
+        holder.textViewPrice.setText(String.valueOf(property.getPrice()));
         holder.textViewLocation.setText(property.getLocation());
-        holder.textViewSize.setText(property.getSize());
+        holder.textViewSize.setText(String.valueOf(property.getSize()));
 
-        if (property.getImageUrl() != null && !property.getImageUrl().isEmpty()) {
-            Picasso.get().load(property.getImageUrl()).into(holder.imageViewProperty);
+        // Use Picasso to load the image
+        if (property.getImage_url() != null && !property.getImage_url().isEmpty()) {
+            Picasso.get().load(property.getImage_url()).into(holder.imageViewProperty);
         } else {
-            // Configura una imagen de reserva si la URL está vacía NO TENGO TIEMPO AAAAAA
-            //holder.imageViewProperty.setImageResource(R.drawable.image_placeholder);
+            // If the image URL is empty or null, you can set a default image or leave it blank
+            // Example: holder.imageViewProperty.setImageResource(R.drawable.default_image);
         }
-
-        holder.likeButton.setOnClickListener(view -> {
-            // Lógica para el botón 'like'
-        });
     }
-
 
     @Override
     public int getItemCount() {
+        Log.d("PropertyAdapter", "Item count: " + propertyList.size());
         return propertyList.size();
     }
 
+    // ViewHolder class
     static class PropertyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewProperty;
         TextView textViewTitle, textViewPrice, textViewLocation, textViewSize;
-        Button likeButton;
 
         PropertyViewHolder(View itemView) {
             super(itemView);
@@ -72,7 +70,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.Proper
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
             textViewLocation = itemView.findViewById(R.id.textViewLocation);
             textViewSize = itemView.findViewById(R.id.textViewSize);
-            likeButton = itemView.findViewById(R.id.likeButton);
         }
     }
 }
+

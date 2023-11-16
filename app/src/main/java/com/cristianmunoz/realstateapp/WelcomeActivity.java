@@ -3,7 +3,9 @@ package com.cristianmunoz.realstateapp;
         import android.os.Bundle;
         import android.util.Log;
         import android.view.View;
+        import android.widget.ArrayAdapter;
         import android.widget.Button;
+        import android.widget.Spinner;
         import android.widget.Toast;
         import androidx.annotation.NonNull;
         import androidx.appcompat.app.AppCompatActivity;
@@ -13,26 +15,21 @@ package com.cristianmunoz.realstateapp;
         import com.google.firebase.firestore.DocumentSnapshot;
         import com.google.firebase.firestore.FirebaseFirestore;
         import com.google.firebase.firestore.Query;
-        import com.google.firebase.firestore.QueryDocumentSnapshot;
         import com.google.firebase.firestore.QuerySnapshot;
         import java.util.ArrayList;
-        import java.util.List;
-        import android.widget.ArrayAdapter;
-        import android.widget.Spinner;
         import java.util.Arrays;
         import java.util.List;
 
-
 public class WelcomeActivity extends AppCompatActivity {
 
+    private static final String TAG = "WelcomeActivity";
     private RecyclerView recyclerViewProperties;
     private PropertyAdapter propertyAdapter;
     private FirebaseFirestore db;
     private DocumentSnapshot lastVisible;
     private Button btnLoadMore;
     private Spinner spinnerProvinces;
-
-    private List<Property> propertyList; // Definir propertyList aquí
+    private List<Property> propertyList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +42,10 @@ public class WelcomeActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        propertyList = new ArrayList<>(); // Inicializar propertyList aquí
-
         propertyAdapter = new PropertyAdapter(propertyList);
         recyclerViewProperties.setAdapter(propertyAdapter);
 
         btnLoadMore.setOnClickListener(v -> loadPropertiesFromFirestore(true));
-
         loadPropertiesFromFirestore(false);
 
         setupProvinceSpinner();
@@ -71,6 +65,9 @@ public class WelcomeActivity extends AppCompatActivity {
 
         if (loadMore && lastVisible != null) {
             query = query.startAfter(lastVisible);
+            Log.d("WelcomeActivity", "Loading more properties...");
+        } else {
+            Log.d("WelcomeActivity", "Loading initial properties...");
         }
 
         query.limit(10).get().addOnCompleteListener(task -> {
@@ -78,31 +75,46 @@ public class WelcomeActivity extends AppCompatActivity {
                 QuerySnapshot querySnapshot = task.getResult();
                 if (querySnapshot != null && !querySnapshot.isEmpty()) {
                     lastVisible = querySnapshot.getDocuments().get(querySnapshot.size() - 1);
-                    List<Property> newProperties = new ArrayList<>();
-                    for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
-                        String title = documentSnapshot.getString("title");
-                        String price = documentSnapshot.getLong("price").toString();
-                        String location = documentSnapshot.getString("location");
-                        String size = documentSnapshot.getLong("size").toString();
-                        String imageUrl = documentSnapshot.getString("image_url");
 
-                        newProperties.add(new Property(title, price, location, size, imageUrl));
+                    if (!loadMore) {
+                        propertyList.clear();
                     }
 
-                    if (loadMore) {
-                        propertyList.addAll(newProperties);
-                    } else {
-                        propertyList = newProperties;
+                    int initialSize = propertyList.size();
+                    for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
+                        Property property = documentSnapshot.toObject(Property.class);
+                        if (property != null) {
+                            propertyList.add(property);
+                            Log.d("WelcomeActivity", "Added property: " + property.getTitle());
+                        }
                     }
-                    propertyAdapter.setPropertyList(propertyList);
+
+                    int newSize = propertyList.size();
+                    Log.d("WelcomeActivity", "Number of properties fetched: " + (newSize - initialSize));
+
+                    runOnUiThread(() -> {
+                        propertyAdapter.setPropertyList(propertyList);
+                        Log.d("WelcomeActivity", "Property list updated. Size: " + propertyList.size());
+                        if (loadMore) {
+                            recyclerViewProperties.scrollToPosition(initialSize - 1);
+                        }
+                    });
+                } else if (!loadMore) {
+                    runOnUiThread(() -> Toast.makeText(WelcomeActivity.this, "No se encontraron propiedades", Toast.LENGTH_SHORT).show());
                 }
             } else {
-                Toast.makeText(WelcomeActivity.this, "Error al cargar propiedades", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> Toast.makeText(WelcomeActivity.this, "Error al cargar propiedades", Toast.LENGTH_SHORT).show());
             }
         });
     }
 
+
     public void onSearchClicked(View view) {
+        lastVisible = null;
+        applyFiltersAndLoad();
+    }
+
+    private void applyFiltersAndLoad() {
         String selectedProvince = spinnerProvinces.getSelectedItem().toString();
         String minPriceStr = ((TextInputEditText) findViewById(R.id.editTextMinPrice)).getText().toString();
         String maxPriceStr = ((TextInputEditText) findViewById(R.id.editTextMaxPrice)).getText().toString();
@@ -111,7 +123,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
         Query query = db.collection("real_estate_data_new");
 
-        // Aplicación de filtros
         if (!selectedProvince.isEmpty()) {
             query = query.whereEqualTo("province", selectedProvince);
         }
@@ -138,34 +149,24 @@ public class WelcomeActivity extends AppCompatActivity {
             return;
         }
 
-        // Realizando la consulta
         query.limit(10).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 QuerySnapshot querySnapshot = task.getResult();
                 if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                    List<Property> newProperties = new ArrayList<>();
-                    for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
-                        // Suponiendo que estos son los campos en tus documentos de Firestore
-                        String title = documentSnapshot.getString("title");
-                        String price = documentSnapshot.getLong("price").toString();
-                        String location = documentSnapshot.getString("location");
-                        String size = documentSnapshot.getLong("size").toString();
-                        String imageUrl = documentSnapshot.getString("image_url");
-
-                        newProperties.add(new Property(title, price, location, size, imageUrl));
+                    propertyList.clear();
+                    for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
+                        Property property = documentSnapshot.toObject(Property.class);
+                        if (property != null) {
+                            propertyList.add(property);
+                        }
                     }
-                    propertyAdapter.setPropertyList(newProperties);
+                    propertyAdapter.setPropertyList(propertyList);
                 } else {
-                    Toast.makeText(WelcomeActivity.this, "No se encontraron propiedades", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WelcomeActivity.this, "No se encontraron propiedades con los filtros aplicados", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.e("FirestoreQueryError", "Error: ", task.getException());
                 Toast.makeText(WelcomeActivity.this, "Error al realizar la consulta", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-
-
-
 }
